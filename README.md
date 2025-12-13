@@ -1,5 +1,8 @@
 ## Name Changer is mod that adds a simple nickname system Works on both client and server.
 
+Name Changer is a mod created specifically to support roleplay gameplay
+It allows players to use their character names instead of their real account names, helping maintain immersion and preventing the roleplay experience from breaking
+
 ### Features
 Players can set their own nickname using /nick
 Reset back to the real name
