@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "name_changer",
+  "version": "${version}",
+  "name": "Name Changer",
+  "description": "Adds a simple nickname system for roleplay. Works on both client and server.",
+  "authors": [
+    "SamSu255"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/name_changer/icon.png",
+
+  "environment": "*",
+
+  "entrypoints": {
+    "main": [
+      "name_changer.Name_changer"
+    ],
+    "client": [
+      "name_changer.Name_changerClient"
+    ]
+  },
+
+  "mixins": [
+    "name_changer1_21_1.client.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.1",
+    "fabric-api": "*"
+  },
+
+  "suggests": {
+    "modmenu": "*"
+  }
+}
