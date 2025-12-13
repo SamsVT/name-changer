@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "name_changer",
+  "version": "1.0.0",
+  "name": "name changer",
+  "icon": "assets/name_changer/icon.png",
+  "description": "Nickname mod (client+server)",
+  "authors": ["Sam_Su255"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["name_changer.Name_changer"],
+    "client": ["name_changer.Name_changerClient"]
+  },
+  "mixins": [
+    "name_changer.client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "1.20.1",
+    "fabric-api": "*"
+  }
+}
