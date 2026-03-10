@@ -1,7 +1,7 @@
 package name_changer.mixin;
 
 import com.mojang.authlib.GameProfile;
-import name_changer.Name_changerClient;
+import name_changer.NicknameClientState;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,9 +20,9 @@ public abstract class PlayerListEntryMixin {
         var profile = getProfile();
         if (profile == null || profile.getId() == null) return;
 
-        Text nick = Name_changerClient.getNickOrNull(profile.getId());
-        if (nick != null) {
-            cir.setReturnValue(nick);
+        Text nickname = NicknameClientState.getTabDisplayName(profile.getId(), profile.getName());
+        if (nickname != null) {
+            cir.setReturnValue(nickname);
         }
     }
 }

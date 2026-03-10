@@ -1,38 +1,35 @@
-## Name Changer is mod that adds a simple nickname system Works on both client and server.
+# Name Changer
 
-Name Changer is a mod created specifically to support roleplay gameplay
-It allows players to use their character names instead of their real account names, helping maintain immersion and preventing the roleplay experience from breaking
+Name Changer is a roleplay nickname mod for Minecraft.
+It changes how player names are displayed without changing the real account name, UUID, or authentication identity.
 
-### Features
-Players can set their own nickname using /nick
-Reset back to the real name
-OP can toggle “hide all player names” server-wide with /nick hide on/off
+## Features
 
-Hold U to temporarily reveal real names while hide mode is enabled
+- `/nick <name>` or `/nick name <name>` sets a nickname with a 32 character limit
+- `/nick reset` removes your nickname
+- `/nick hide on` and `/nick hide off` let OPs hide floating player names server-wide
+- Hold `U` while hide mode is enabled to show hidden names temporarily
+- Nicknames are shown in overhead names, chat, the tab list, and supported voice overlays
+- Real account identity is preserved for auth-dependent mods and systems
 
-### ⌨️Commands
-```
-/nick name <name> or /nick <name> — set nickname (max 32 chars)
+## Voice Chat Compatibility
 
-/nick reset — reset nickname
+- `Plasmo Voice` overlay names are replaced with nicknames
+- Unicode characters in the Plasmo overlay are patched so special characters render correctly
+- `Simple Voice Chat` identity is left untouched
 
-/nick hide on — hide all names (OP only)
+## Project Layout
 
-/nick hide off — disable hide all names (OP only)
-```
+- [1.20.1](./1.20.1) - Architectury version
+- [1.21.1](./1.21.1) - Fabric version
 
-## 📥Installation  
+## Installation
 
-### Fabric  
-1. Install [Fabric API](https://modrinth.com/mod/fabric-api)  
-2. Place `name-changer-x.x.x.jar` into your `mods` folder  
+### Fabric
 
-### Forge  
-1. Install [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api)  
-2. Install [Sinytra Connector](https://modrinth.com/mod/connector)  
-3. Place `name-changer-x.x.x.jar` into your `mods` folder  
+1. Install [Fabric API](https://modrinth.com/mod/fabric-api)
+2. Place the built mod jar in your `mods` folder
 
+### Server
 
-## ℹ️Notes
-If the nickname is longer than 32 characters, it won’t change and will warn the player
-Hide mode removes floating name labels completely until you hold U to reveal temporarily
+Install the mod on both the server and clients if you want chat, tab list, overhead names, and nickname sync to match.

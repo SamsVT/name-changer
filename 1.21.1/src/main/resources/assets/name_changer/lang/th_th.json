@@ -1,10 +1,12 @@
 {
-  "text.name_changer.usage": "คำสั่ง:\n/nick name <ชื่อ>\n/nick reset\n/nick hide on|off (เฉพาะ OP)\n(กด U ค้างเพื่อแสดงชื่อชั่วคราว)",
-  "text.name_changer.nick_set": "ตั้งชื่อเป็น: %s",
-  "text.name_changer.nick_reset": "รีเซ็ตชื่อเรียบร้อย",
-  "text.name_changer.nick_empty": "ชื่อห้ามว่าง",
-  "text.name_changer.nick_too_long": "ชื่อยาวเกิน %s ตัวอักษร (รวมเว้นวรรค) — ไม่ได้เปลี่ยน",
-  "text.name_changer.hide_on": "ซ่อนชื่อทุกคน: เปิด (กด U ค้างเพื่อดูชื่อจริงชั่วคราว)",
-  "text.name_changer.hide_off": "ซ่อนชื่อทุกคน: ปิด",
-  "key.name_changer.reveal": "แสดงชื่อจริงชั่วคราว (กดค้าง)"
+  "text.name_changer.usage": "คำสั่ง:\n/nick <ชื่อ> หรือ /nick name <ชื่อ>\n/nick reset\n/nick hide on|off (เฉพาะ OP)\n(กด U ค้างเพื่อแสดงชื่อที่ซ่อนชั่วคราว)",
+  "text.name_changer.nick_set": "ตั้งชื่อเล่นเป็น %s แล้ว",
+  "text.name_changer.nick_reset": "รีเซ็ตชื่อเล่นแล้ว",
+  "text.name_changer.nick_reset_none": "ตอนนี้คุณยังไม่มีชื่อเล่นให้รีเซ็ต",
+  "text.name_changer.nick_empty": "พิมพ์ชื่อเล่นหลังคำสั่ง /nick ก่อน",
+  "text.name_changer.nick_too_long": "ชื่อเล่นยาวได้ไม่เกิน %s ตัวอักษร",
+  "text.name_changer.hide_on": "เปิดโหมดซ่อนชื่อทั้งหมดแล้ว กด U ค้างเพื่อแสดงชื่อที่ซ่อนชั่วคราว",
+  "text.name_changer.hide_off": "ปิดโหมดซ่อนชื่อทั้งหมดแล้ว",
+  "key.categories.name_changer": "Name Changer",
+  "key.name_changer.show_hidden_names": "แสดงชื่อที่ซ่อน"
 }

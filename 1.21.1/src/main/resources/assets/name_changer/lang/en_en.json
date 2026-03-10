@@ -1,10 +1,12 @@
 {
-  "text.name_changer.usage": "Commands:\n/nick name <name>\n/nick reset\n/nick hide on|off (OP only)\n(Hold U to reveal names temporarily)",
-  "text.name_changer.nick_set": "Nickname set: %s",
-  "text.name_changer.nick_reset": "Nickname reset",
-  "text.name_changer.nick_empty": "Name cannot be empty",
-  "text.name_changer.nick_too_long": "Name is longer than %s characters (including spaces) — not changed",
-  "text.name_changer.hide_on": "Hide all names: ON (Hold U to reveal real names temporarily)",
-  "text.name_changer.hide_off": "Hide all names: OFF",
-  "key.name_changer.reveal": "Reveal real names (hold)"
+  "text.name_changer.usage": "Commands:\n/nick <name> or /nick name <name>\n/nick reset\n/nick hide on|off (OP only)\n(Hold U to show hidden names temporarily)",
+  "text.name_changer.nick_set": "Nickname set to %s.",
+  "text.name_changer.nick_reset": "Nickname reset.",
+  "text.name_changer.nick_reset_none": "You do not have a nickname to reset.",
+  "text.name_changer.nick_empty": "Type a nickname after /nick.",
+  "text.name_changer.nick_too_long": "Nicknames can be at most %s characters long.",
+  "text.name_changer.hide_on": "Hide all names enabled. Hold U to show hidden names temporarily.",
+  "text.name_changer.hide_off": "Hide all names disabled.",
+  "key.categories.name_changer": "Name Changer",
+  "key.name_changer.show_hidden_names": "Show hidden names"
 }

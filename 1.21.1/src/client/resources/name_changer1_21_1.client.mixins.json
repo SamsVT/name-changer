@@ -3,10 +3,10 @@
   "package": "name_changer.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "EntityRendererMixin",
     "PlayerListEntryMixin",
-    "EntityDisplayNameMixin",
-    "PlayerEntityNameMixin",
-    "LivingEntityRendererLabelMixin"
+    "compat.plasmovoice.PlasmoVoiceOverlayRendererMixin",
+    "compat.plasmovoice.PlasmoVoiceTextBuilderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

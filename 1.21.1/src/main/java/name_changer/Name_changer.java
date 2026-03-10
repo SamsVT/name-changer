@@ -11,8 +11,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.HashMap;
-
 public class Name_changer implements ModInitializer {
 
     private static final int MAX_NICK_LEN = 32;
@@ -24,9 +22,7 @@ public class Name_changer implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             NickState st = NickState.get(server);
-
-            var snapshot = new HashMap<>(st.getAllNicks());
-            ServerPlayNetworking.send(player, new NickPayloads.SyncAllS2CPayload(snapshot, st.isHideAll()));
+            NickSync.sendAllTo(player, st.getAllNicks(), st.isHideAll());
         });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -35,34 +31,21 @@ public class Name_changer implements ModInitializer {
                         ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.usage"), false);
                         return 1;
                     })
-
+                    .then(CommandManager.argument("name", StringArgumentType.greedyString())
+                            .executes(ctx -> setNickname(
+                                    ctx.getSource().getPlayer(),
+                                    ctx.getSource().getServer(),
+                                    StringArgumentType.getString(ctx, "name"),
+                                    ctx.getSource()::sendFeedback
+                            )))
                     .then(CommandManager.literal("name")
                             .then(CommandManager.argument("name", StringArgumentType.greedyString())
-                                    .executes(ctx -> {
-                                        ServerPlayerEntity p = ctx.getSource().getPlayer();
-                                        MinecraftServer server = ctx.getSource().getServer();
-                                        NickState st = NickState.get(server);
-
-                                        String raw = StringArgumentType.getString(ctx, "name").trim();
-                                        if (raw.isBlank()) {
-                                            ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.nick_empty"), false);
-                                            return 0;
-                                        }
-
-                                        if (raw.length() > MAX_NICK_LEN) {
-                                            final int max = MAX_NICK_LEN;
-                                            ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.nick_too_long", max), false);
-                                            return 0;
-                                        }
-
-                                        final String nick = raw;
-
-                                        st.setNick(p.getUuid(), nick);
-                                        broadcast(server, new NickPayloads.SetOneNickS2CPayload(p.getUuid(), nick));
-
-                                        ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.nick_set", nick), false);
-                                        return 1;
-                                    })
+                                    .executes(ctx -> setNickname(
+                                            ctx.getSource().getPlayer(),
+                                            ctx.getSource().getServer(),
+                                            StringArgumentType.getString(ctx, "name"),
+                                            ctx.getSource()::sendFeedback
+                                    ))
                             )
                     )
 
@@ -72,8 +55,13 @@ public class Name_changer implements ModInitializer {
                                 MinecraftServer server = ctx.getSource().getServer();
                                 NickState st = NickState.get(server);
 
+                                if (st.getNick(p.getUuid()).isBlank()) {
+                                    ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.nick_reset_none"), false);
+                                    return 0;
+                                }
+
                                 st.setNick(p.getUuid(), "");
-                                broadcast(server, new NickPayloads.SetOneNickS2CPayload(p.getUuid(), ""));
+                                NickSync.broadcastNick(server, p.getUuid(), "");
 
                                 ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.nick_reset"), false);
                                 return 1;
@@ -87,7 +75,7 @@ public class Name_changer implements ModInitializer {
                                 NickState st = NickState.get(server);
 
                                 st.setHideAll(true);
-                                broadcast(server, new NickPayloads.HideAllS2CPayload(true));
+                                NickSync.broadcastHideAll(server, true);
 
                                 ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.hide_on"), true);
                                 return 1;
@@ -97,7 +85,7 @@ public class Name_changer implements ModInitializer {
                                 NickState st = NickState.get(server);
 
                                 st.setHideAll(false);
-                                broadcast(server, new NickPayloads.HideAllS2CPayload(false));
+                                NickSync.broadcastHideAll(server, false);
 
                                 ctx.getSource().sendFeedback(() -> Text.translatable("text.name_changer.hide_off"), true);
                                 return 1;
@@ -107,9 +95,28 @@ public class Name_changer implements ModInitializer {
         });
     }
 
-    private static void broadcast(MinecraftServer server, net.minecraft.network.packet.CustomPayload payload) {
-        for (ServerPlayerEntity p : PlayerLookup.all(server)) {
-            ServerPlayNetworking.send(p, payload);
+    private static int setNickname(
+            ServerPlayerEntity player,
+            MinecraftServer server,
+            String rawNickname,
+            java.util.function.BiConsumer<java.util.function.Supplier<Text>, Boolean> feedbackSender
+    ) {
+        String nickname = rawNickname.trim();
+        if (nickname.isBlank()) {
+            feedbackSender.accept(() -> Text.translatable("text.name_changer.nick_empty"), false);
+            return 0;
         }
+
+        if (nickname.length() > MAX_NICK_LEN) {
+            feedbackSender.accept(() -> Text.translatable("text.name_changer.nick_too_long", MAX_NICK_LEN), false);
+            return 0;
+        }
+
+        NickState state = NickState.get(server);
+        state.setNick(player.getUuid(), nickname);
+        NickSync.broadcastNick(server, player.getUuid(), nickname);
+
+        feedbackSender.accept(() -> Text.translatable("text.name_changer.nick_set", nickname), false);
+        return 1;
     }
 }

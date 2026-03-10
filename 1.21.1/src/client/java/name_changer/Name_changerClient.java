@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -13,82 +14,57 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Name_changerClient implements ClientModInitializer {
-
-    public static final Map<UUID, String> NICKS = new ConcurrentHashMap<>();
-    private static volatile boolean HIDE_ALL = false;
-
-    private static KeyBinding REVEAL_KEY;
-    private static volatile boolean REVEAL_HELD = false;
-
-    public static boolean isRevealHeld() { return REVEAL_HELD; }
-    public static boolean isHideAll() { return HIDE_ALL; }
-
-    public static Text getNickOrNull(UUID id) {
-        String nick = NICKS.get(id);
-        if (nick == null || nick.isBlank()) return null;
-        return Text.literal(nick);
-    }
-
-    // แชท: ถ้ามี nick -> ใช้ nick, ไม่มี -> ใช้ชื่อจริง
-    public static Text getChatShownName(UUID id, GameProfile profile) {
-        Text nick = getNickOrNull(id);
-        if (nick != null) return nick;
-        return Text.literal(profile.getName());
-    }
+    private static KeyBinding SHOW_HIDDEN_NAMES_KEY;
 
     @Override
     public void onInitializeClient() {
-
-        REVEAL_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.name_changer.reveal",
+        SHOW_HIDDEN_NAMES_KEY = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.name_changer.show_hidden_names",
                 GLFW.GLFW_KEY_U,
-                "key.categories.misc"
+                "key.categories.name_changer"
         ));
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> REVEAL_HELD = REVEAL_KEY.isPressed());
+        ClientTickEvents.END_CLIENT_TICK.register(client ->
+                NicknameClientState.setShowHiddenNames(SHOW_HIDDEN_NAMES_KEY.isPressed())
+        );
 
-        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_SYNC_ALL, (payload, context) -> {
-            context.client().execute(() -> {
-                NICKS.clear();
-                NICKS.putAll(payload.nicks());
-                HIDE_ALL = payload.hideAll();
-            });
-        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> NicknameClientState.clear());
 
-        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_SET_ONE_NICK, (payload, context) -> {
-            context.client().execute(() -> {
-                String nick = payload.nick();
-                if (nick == null || nick.isBlank()) NICKS.remove(payload.uuid());
-                else NICKS.put(payload.uuid(), nick);
-            });
-        });
+        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_SYNC_ALL, (payload, context) ->
+                context.client().execute(() ->
+                        NicknameClientState.applySyncState(payload.nicks(), payload.hideAll())
+                )
+        );
 
-        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_HIDE_ALL, (payload, context) -> {
-            context.client().execute(() -> HIDE_ALL = payload.hideAll());
-        });
+        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_SET_ONE_NICK, (payload, context) ->
+                context.client().execute(() ->
+                        NicknameClientState.setNickname(payload.uuid(), payload.nick())
+                )
+        );
 
-        // แชท: แสดงชื่อเป็น Nick (ถ้ามี) เสมอ
+        ClientPlayNetworking.registerGlobalReceiver(NickPayloads.S2C_HIDE_ALL, (payload, context) ->
+                context.client().execute(() ->
+                        NicknameClientState.setHideAllNames(payload.hideAll())
+                )
+        );
+
         ClientReceiveMessageEvents.ALLOW_CHAT.register((Text message,
                                                         SignedMessage signedMessage,
                                                         GameProfile sender,
                                                         net.minecraft.network.message.MessageType.Parameters params,
                                                         Instant receptionTimestamp) -> {
+            if (sender == null) {
+                return true;
+            }
 
-            if (sender == null) return true;
-
-            UUID id = sender.getId();
-            Text content = (signedMessage != null) ? signedMessage.getContent() : message;
-
-            Text shownName = getChatShownName(id, sender);
-            Text newMsg = Text.translatable("chat.type.text", shownName, content);
+            Text content = signedMessage != null ? signedMessage.getContent() : message;
+            Text shownName = NicknameClientState.getChatDisplayName(sender.getId(), sender.getName());
+            Text rewrittenMessage = Text.translatable("chat.type.text", shownName, content);
 
             MinecraftClient.getInstance().execute(() ->
-                    MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(newMsg)
+                    MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(rewrittenMessage)
             );
 
             return false;
