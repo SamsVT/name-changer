@@ -1,0 +1,11 @@
+{
+  "command.namechanger1_20_1.nick.error.empty": "พิมพ์ชื่อเล่นหลังคำสั่ง /nick ก่อน",
+  "command.namechanger1_20_1.nick.error.too_long": "ชื่อเล่นยาวได้ไม่เกิน %s ตัวอักษร",
+  "command.namechanger1_20_1.nick.set.success": "ตั้งชื่อเล่นเป็น %s แล้ว",
+  "command.namechanger1_20_1.nick.reset.error.none": "ตอนนี้ยังไม่มีชื่อเล่นให้รีเซ็ต",
+  "command.namechanger1_20_1.nick.reset.success": "รีเซ็ตชื่อเล่นแล้ว",
+  "command.namechanger1_20_1.nick.hide.on": "เปิดโหมดซ่อนชื่อทั้งหมดแล้ว",
+  "command.namechanger1_20_1.nick.hide.off": "ปิดโหมดซ่อนชื่อทั้งหมดแล้ว",
+  "key.categories.namechanger1_20_1": "NameChanger1.20.1",
+  "key.namechanger1_20_1.reveal_real_names": "แสดงชื่อที่ซ่อน"
+}

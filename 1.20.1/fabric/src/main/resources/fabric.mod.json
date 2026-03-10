@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "namechanger1_20_1",
+  "version": "${version}",
+  "name": "NameChanger1.20.1",
+  "description": "Nickname players without touching their real GameProfile identity.",
+  "authors": [
+    "Q Team Studio"
+  ],
+  "contact": {
+    "homepage": "https://dotpp.xyz"
+  },
+  "license": "unlicense",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.sammy.namechanger1_20_1.fabric.Namechanger1_20_1Fabric"
+    ],
+    "client": [
+      "com.sammy.namechanger1_20_1.fabric.client.Namechanger1_20_1FabricClient"
+    ]
+  },
+  "mixins": [
+    "namechanger1_20_1.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "architectury": ">=9.2.14",
+    "fabric-api": "*"
+  },
+  "suggests": {}
+}

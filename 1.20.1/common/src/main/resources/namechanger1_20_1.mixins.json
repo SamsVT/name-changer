@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.sammy.namechanger1_20_1.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "client.ChatListenerMixin",
+    "client.EntityRendererMixin",
+    "client.PlayerTabOverlayMixin",
+    "compat.plasmovoice.PlasmoVoiceOverlayRendererMixin",
+    "compat.plasmovoice.PlasmoVoiceTextBuilderMixin"
+  ],
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

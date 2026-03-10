@@ -1,0 +1,11 @@
+{
+  "command.namechanger1_20_1.nick.error.empty": "Type a nickname after /nick.",
+  "command.namechanger1_20_1.nick.error.too_long": "Nicknames can be at most %s characters long.",
+  "command.namechanger1_20_1.nick.set.success": "Nickname set to %s.",
+  "command.namechanger1_20_1.nick.reset.error.none": "You do not have a nickname to reset.",
+  "command.namechanger1_20_1.nick.reset.success": "Nickname reset.",
+  "command.namechanger1_20_1.nick.hide.on": "Hide-all-names mode enabled.",
+  "command.namechanger1_20_1.nick.hide.off": "Hide-all-names mode disabled.",
+  "key.categories.namechanger1_20_1": "NameChanger1.20.1",
+  "key.namechanger1_20_1.reveal_real_names": "Show hidden names"
+}
